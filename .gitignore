@@ -1,0 +1,8 @@
+.idea
+readme.md
+
+.idea/
+*.iml
+*.iws
+log/
+target/
