@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: com.food-ordering-system/order.service:1.0-SNAPSHOT
+          image: com.food.ordering.system/order.service:1.0-SNAPSHOT
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
+              value: "jdbc:postgresql://postgres-service:5432/postgres?currentSchema=order&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
             - name: KAFKA-CONFIG_BOOTSTRAP-SERVERS
               value: "local-confluent-kafka-cp-kafka-headless:9092"
             - name: KAFKA-CONFIG_SCHEMA-REGISTRY-URL
@@ -49,26 +49,7 @@ spec:
       port: 8181
   type: LoadBalancer
   loadBalancerIP: ""
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: order-deployment-hpa
-  namespace: default
-  labels:
-    app: order-deployment
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: order-deployment
-    apiVersion: apps/v1
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: 85
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -88,10 +69,10 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: com.food-ordering-system/payment.service:1.0-SNAPSHOT
+          image: com.food.ordering.system/payment.service:1.0-SNAPSHOT
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
+              value: "jdbc:postgresql://postgres-service:5432/postgres?currentSchema=payment&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
             - name: KAFKA-CONFIG_BOOTSTRAP-SERVERS
               value: "local-confluent-kafka-cp-kafka-headless:9092"
             - name: KAFKA-CONFIG_SCHEMA-REGISTRY-URL
@@ -120,26 +101,7 @@ spec:
       port: 8182
   type: LoadBalancer
   loadBalancerIP: ""
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: payment-deployment-hpa
-  namespace: default
-  labels:
-    app: payment-deployment
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: payment-deployment
-    apiVersion: apps/v1
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: 85
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -159,10 +121,10 @@ spec:
     spec:
       containers:
         - name: restaurant-service
-          image: com.food-ordering-system/restaurant.service:1.0-SNAPSHOT
+          image: com.food.ordering.system/restaurant.service:1.0-SNAPSHOT
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
+              value: "jdbc:postgresql://postgres-service:5432/postgres?currentSchema=restaurant&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
             - name: KAFKA-CONFIG_BOOTSTRAP-SERVERS
               value: "local-confluent-kafka-cp-kafka-headless:9092"
             - name: KAFKA-CONFIG_SCHEMA-REGISTRY-URL
@@ -191,26 +153,7 @@ spec:
       port: 8183
   type: LoadBalancer
   loadBalancerIP: ""
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: restaurant-deployment-hpa
-  namespace: default
-  labels:
-    app: restaurant-deployment
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: restaurant-deployment
-    apiVersion: apps/v1
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: 85
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -229,10 +172,10 @@ spec:
     spec:
       containers:
         - name: customer-service
-          image: com.food-ordering-system/customer.service:1.0-SNAPSHOT
+          image: com.food.ordering.system/customer.service:1.0-SNAPSHOT
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
+              value: "jdbc:postgresql://postgres-service:5432/postgres?currentSchema=customer&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified"
             - name: KAFKA-CONFIG_BOOTSTRAP-SERVERS
               value: "local-confluent-kafka-cp-kafka-headless:9092"
             - name: KAFKA-CONFIG_SCHEMA-REGISTRY-URL
@@ -261,23 +204,3 @@ spec:
       port: 8184
   type: LoadBalancer
   loadBalancerIP: ""
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: customer-deployment-hpa
-  namespace: default
-  labels:
-    app: customer-deployment
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: customer-deployment
-    apiVersion: apps/v1
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: 85
